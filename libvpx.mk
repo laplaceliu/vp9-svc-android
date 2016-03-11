@@ -24,6 +24,8 @@ LOCAL_CFLAGS := -DHAVE_CONFIG_H=vpx_config.h
 LOCAL_ARM_MODE := arm
 LOCAL_CFLAGS += -O3
 
+LOCAL_CFLAGS += -Wno-unused-parameter
+
 LOCAL_C_INCLUDES := $(libvpx_source_dir)
 
 # Load the arch-specific settings
