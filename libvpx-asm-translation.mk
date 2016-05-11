@@ -17,7 +17,9 @@ VPX_ASM := $(addprefix $(libvpx_intermediates)/, $(libvpx_codec_srcs_asm_$(TARGE
 VPX_GEN := $(addsuffix .s, $(VPX_ASM))
 $(VPX_GEN) : PRIVATE_SOURCE_DIR := $(libvpx_source_dir)
 $(VPX_GEN) : PRIVATE_CUSTOM_TOOL = cat $< | perl $(PRIVATE_SOURCE_DIR)/build/make/ads2gas.pl > $@
-$(VPX_GEN) : $(libvpx_intermediates)/%.s : $(libvpx_source_dir)/%
+$(VPX_GEN) : $(libvpx_intermediates)/%.s : $(libvpx_source_dir)/% \
+		$(libvpx_source_dir)/build/make/ads2gas.pl \
+		$(libvpx_source_dir)/build/make/thumb.pm
 	$(transform-generated-source)
 
 LOCAL_GENERATED_SOURCES_$(TARGET_$(libvpx_2nd_arch)ARCH) += $(VPX_GEN)
