@@ -154,9 +154,11 @@ gen_config_files x86_64 "--target=x86_64-linux-gcc ${intel} ${all_platforms}"
 gen_config_files arm "--target=armv6-linux-gcc  ${all_platforms}"
 gen_config_files arm-neon "--target=armv7-linux-gcc ${all_platforms}"
 gen_config_files arm64 "--force-target=armv8-linux-gcc ${all_platforms}"
-gen_config_files mips32 "--target=mips32-linux-gcc --disable-dspr2 ${all_platforms}"
+gen_config_files mips32 "--target=mips32-linux-gcc --disable-dspr2 --disable-msa ${all_platforms}"
 gen_config_files mips32-dspr2 "--target=mips32-linux-gcc --enable-dspr2 ${all_platforms}"
-gen_config_files mips64 "--target=mips64-linux-gcc ${all_platforms}"
+gen_config_files mips32-msa "--target=mips32-linux-gcc --enable-msa ${all_platforms}"
+gen_config_files mips64 "--target=mips64-linux-gcc --disable-msa ${all_platforms}"
+gen_config_files mips64-msa "--target=mips64-linux-gcc --enable-msa ${all_platforms}"
 gen_config_files generic "--target=generic-gnu ${all_platforms}"
 
 echo "Remove temporary directory."
@@ -171,7 +173,9 @@ lint_config arm-neon
 lint_config arm64
 lint_config mips32
 lint_config mips32-dspr2
+lint_config mips32-msa
 lint_config mips64
+lint_config mips64-msa
 lint_config generic
 
 echo "Create temporary directory."
@@ -187,7 +191,9 @@ gen_rtcd_header arm-neon armv7
 gen_rtcd_header arm64 armv8
 gen_rtcd_header mips32 mips32
 gen_rtcd_header mips32-dspr2 mips32
+gen_rtcd_header mips32-msa mips32
 gen_rtcd_header mips64 mips64
+gen_rtcd_header mips64-msa mips64
 gen_rtcd_header generic generic
 
 echo "Prepare Makefile."
@@ -236,11 +242,23 @@ make_clean
 make libvpx_srcs.txt target=libs $config > /dev/null
 cp libvpx_srcs.txt $BASE_DIR/$LIBVPX_CONFIG_DIR/mips32-dspr2/
 
+echo "Generate MIPS MSA source list."
+config=$(print_config_basic mips32-msa)
+make_clean
+make libvpx_srcs.txt target=libs $config > /dev/null
+cp libvpx_srcs.txt $BASE_DIR/$LIBVPX_CONFIG_DIR/mips32-msa/
+
 echo "Generate MIPS64 source list."
 config=$(print_config_basic mips64)
 make_clean
 make libvpx_srcs.txt target=libs $config > /dev/null
 cp libvpx_srcs.txt $BASE_DIR/$LIBVPX_CONFIG_DIR/mips64/
+
+echo "Generate MIPS64 MSA source list."
+config=$(print_config_basic mips64-msa)
+make_clean
+make libvpx_srcs.txt target=libs $config > /dev/null
+cp libvpx_srcs.txt $BASE_DIR/$LIBVPX_CONFIG_DIR/mips64-msa/
 
 echo "Generate GENERIC source list."
 config=$(print_config_basic generic)
