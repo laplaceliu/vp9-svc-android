@@ -194,20 +194,20 @@ vp9/decoder/vp9_dsubexp.c
 vp9/decoder/vp9_dsubexp.h
 vp9/decoder/vp9_dthread.c
 vp9/decoder/vp9_dthread.h
-vp9/encoder/mips/msa/vp9_avg_msa.c
 vp9/encoder/mips/msa/vp9_error_msa.c
 vp9/encoder/mips/msa/vp9_fdct16x16_msa.c
 vp9/encoder/mips/msa/vp9_fdct4x4_msa.c
 vp9/encoder/mips/msa/vp9_fdct8x8_msa.c
 vp9/encoder/mips/msa/vp9_fdct_msa.h
 vp9/encoder/mips/msa/vp9_temporal_filter_msa.c
+vp9/encoder/vp9_aq_360.c
+vp9/encoder/vp9_aq_360.h
 vp9/encoder/vp9_aq_complexity.c
 vp9/encoder/vp9_aq_complexity.h
 vp9/encoder/vp9_aq_cyclicrefresh.c
 vp9/encoder/vp9_aq_cyclicrefresh.h
 vp9/encoder/vp9_aq_variance.c
 vp9/encoder/vp9_aq_variance.h
-vp9/encoder/vp9_avg.c
 vp9/encoder/vp9_bitstream.c
 vp9/encoder/vp9_bitstream.h
 vp9/encoder/vp9_block.h
@@ -236,6 +236,8 @@ vp9/encoder/vp9_mbgraph.c
 vp9/encoder/vp9_mbgraph.h
 vp9/encoder/vp9_mcomp.c
 vp9/encoder/vp9_mcomp.h
+vp9/encoder/vp9_noise_estimate.c
+vp9/encoder/vp9_noise_estimate.h
 vp9/encoder/vp9_picklpf.c
 vp9/encoder/vp9_picklpf.h
 vp9/encoder/vp9_pickmode.c
@@ -291,6 +293,7 @@ vpx/vpx_frame_buffer.h
 vpx/vpx_image.h
 vpx/vpx_integer.h
 vpx_config.c
+vpx_dsp/avg.c
 vpx_dsp/bitreader.c
 vpx_dsp/bitreader.h
 vpx_dsp/bitreader_buffer.c
@@ -305,6 +308,7 @@ vpx_dsp/intrapred.c
 vpx_dsp/inv_txfm.c
 vpx_dsp/inv_txfm.h
 vpx_dsp/loopfilter.c
+vpx_dsp/mips/avg_msa.c
 vpx_dsp/mips/fwd_dct32x32_msa.c
 vpx_dsp/mips/fwd_txfm_msa.c
 vpx_dsp/mips/fwd_txfm_msa.h
