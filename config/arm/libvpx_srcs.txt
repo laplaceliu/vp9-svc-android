@@ -204,13 +204,14 @@ vp9/decoder/vp9_dsubexp.c
 vp9/decoder/vp9_dsubexp.h
 vp9/decoder/vp9_dthread.c
 vp9/decoder/vp9_dthread.h
+vp9/encoder/vp9_aq_360.c
+vp9/encoder/vp9_aq_360.h
 vp9/encoder/vp9_aq_complexity.c
 vp9/encoder/vp9_aq_complexity.h
 vp9/encoder/vp9_aq_cyclicrefresh.c
 vp9/encoder/vp9_aq_cyclicrefresh.h
 vp9/encoder/vp9_aq_variance.c
 vp9/encoder/vp9_aq_variance.h
-vp9/encoder/vp9_avg.c
 vp9/encoder/vp9_bitstream.c
 vp9/encoder/vp9_bitstream.h
 vp9/encoder/vp9_block.h
@@ -239,6 +240,8 @@ vp9/encoder/vp9_mbgraph.c
 vp9/encoder/vp9_mbgraph.h
 vp9/encoder/vp9_mcomp.c
 vp9/encoder/vp9_mcomp.h
+vp9/encoder/vp9_noise_estimate.c
+vp9/encoder/vp9_noise_estimate.h
 vp9/encoder/vp9_picklpf.c
 vp9/encoder/vp9_picklpf.h
 vp9/encoder/vp9_pickmode.c
@@ -301,6 +304,7 @@ vpx_dsp/arm/variance_halfpixvar16x16_h_media.asm
 vpx_dsp/arm/variance_halfpixvar16x16_hv_media.asm
 vpx_dsp/arm/variance_halfpixvar16x16_v_media.asm
 vpx_dsp/arm/variance_media.asm
+vpx_dsp/avg.c
 vpx_dsp/bitreader.c
 vpx_dsp/bitreader.h
 vpx_dsp/bitreader_buffer.c
