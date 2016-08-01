@@ -207,17 +207,17 @@ vp9/decoder/vp9_dsubexp.c
 vp9/decoder/vp9_dsubexp.h
 vp9/decoder/vp9_dthread.c
 vp9/decoder/vp9_dthread.h
-vp9/encoder/arm/neon/vp9_avg_neon.c
 vp9/encoder/arm/neon/vp9_dct_neon.c
 vp9/encoder/arm/neon/vp9_error_neon.c
 vp9/encoder/arm/neon/vp9_quantize_neon.c
+vp9/encoder/vp9_aq_360.c
+vp9/encoder/vp9_aq_360.h
 vp9/encoder/vp9_aq_complexity.c
 vp9/encoder/vp9_aq_complexity.h
 vp9/encoder/vp9_aq_cyclicrefresh.c
 vp9/encoder/vp9_aq_cyclicrefresh.h
 vp9/encoder/vp9_aq_variance.c
 vp9/encoder/vp9_aq_variance.h
-vp9/encoder/vp9_avg.c
 vp9/encoder/vp9_bitstream.c
 vp9/encoder/vp9_bitstream.h
 vp9/encoder/vp9_block.h
@@ -246,6 +246,8 @@ vp9/encoder/vp9_mbgraph.c
 vp9/encoder/vp9_mbgraph.h
 vp9/encoder/vp9_mcomp.c
 vp9/encoder/vp9_mcomp.h
+vp9/encoder/vp9_noise_estimate.c
+vp9/encoder/vp9_noise_estimate.h
 vp9/encoder/vp9_picklpf.c
 vp9/encoder/vp9_picklpf.h
 vp9/encoder/vp9_pickmode.c
@@ -301,7 +303,9 @@ vpx/vpx_frame_buffer.h
 vpx/vpx_image.h
 vpx/vpx_integer.h
 vpx_config.c
+vpx_dsp/arm/avg_neon.c
 vpx_dsp/arm/fwd_txfm_neon.c
+vpx_dsp/arm/hadamard_neon.c
 vpx_dsp/arm/idct16x16_1_add_neon.c
 vpx_dsp/arm/idct16x16_add_neon.c
 vpx_dsp/arm/idct16x16_neon.c
@@ -326,6 +330,7 @@ vpx_dsp/arm/vpx_convolve8_neon.c
 vpx_dsp/arm/vpx_convolve_avg_neon.c
 vpx_dsp/arm/vpx_convolve_copy_neon.c
 vpx_dsp/arm/vpx_convolve_neon.c
+vpx_dsp/avg.c
 vpx_dsp/bitreader.c
 vpx_dsp/bitreader.h
 vpx_dsp/bitreader_buffer.c
