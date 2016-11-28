@@ -691,92 +691,76 @@ void vp8_decoder_create_threads(VP8D_COMP *pbi)
 }
 
 
-void vp8mt_de_alloc_temp_buffers(VP8D_COMP *pbi, int mb_rows)
-{
-    int i;
+void vp8mt_de_alloc_temp_buffers(VP8D_COMP *pbi, int mb_rows) {
+  int i;
 
-    if (protected_read(&pbi->mt_mutex, &pbi->b_multithreaded_rd))
-    {
-        /* De-allocate mutex */
-        if (pbi->pmutex != NULL) {
-            for (i = 0; i < mb_rows; i++) {
-                pthread_mutex_destroy(&pbi->pmutex[i]);
-            }
-            vpx_free(pbi->pmutex);
-            pbi->pmutex = NULL;
-        }
+  /* De-allocate mutex */
+  if (pbi->pmutex != NULL) {
+      for (i = 0; i < mb_rows; i++) {
+          pthread_mutex_destroy(&pbi->pmutex[i]);
+      }
+      vpx_free(pbi->pmutex);
+      pbi->pmutex = NULL;
+  }
 
-            vpx_free(pbi->mt_current_mb_col);
-            pbi->mt_current_mb_col = NULL ;
+  vpx_free(pbi->mt_current_mb_col);
+  pbi->mt_current_mb_col = NULL;
 
-        /* Free above_row buffers. */
-        if (pbi->mt_yabove_row)
-        {
-            for (i=0; i< mb_rows; i++)
-            {
-                    vpx_free(pbi->mt_yabove_row[i]);
-                    pbi->mt_yabove_row[i] = NULL ;
-            }
-            vpx_free(pbi->mt_yabove_row);
-            pbi->mt_yabove_row = NULL ;
-        }
-
-        if (pbi->mt_uabove_row)
-        {
-            for (i=0; i< mb_rows; i++)
-            {
-                    vpx_free(pbi->mt_uabove_row[i]);
-                    pbi->mt_uabove_row[i] = NULL ;
-            }
-            vpx_free(pbi->mt_uabove_row);
-            pbi->mt_uabove_row = NULL ;
-        }
-
-        if (pbi->mt_vabove_row)
-        {
-            for (i=0; i< mb_rows; i++)
-            {
-                    vpx_free(pbi->mt_vabove_row[i]);
-                    pbi->mt_vabove_row[i] = NULL ;
-            }
-            vpx_free(pbi->mt_vabove_row);
-            pbi->mt_vabove_row = NULL ;
-        }
-
-        /* Free left_col buffers. */
-        if (pbi->mt_yleft_col)
-        {
-            for (i=0; i< mb_rows; i++)
-            {
-                    vpx_free(pbi->mt_yleft_col[i]);
-                    pbi->mt_yleft_col[i] = NULL ;
-            }
-            vpx_free(pbi->mt_yleft_col);
-            pbi->mt_yleft_col = NULL ;
-        }
-
-        if (pbi->mt_uleft_col)
-        {
-            for (i=0; i< mb_rows; i++)
-            {
-                    vpx_free(pbi->mt_uleft_col[i]);
-                    pbi->mt_uleft_col[i] = NULL ;
-            }
-            vpx_free(pbi->mt_uleft_col);
-            pbi->mt_uleft_col = NULL ;
-        }
-
-        if (pbi->mt_vleft_col)
-        {
-            for (i=0; i< mb_rows; i++)
-            {
-                    vpx_free(pbi->mt_vleft_col[i]);
-                    pbi->mt_vleft_col[i] = NULL ;
-            }
-            vpx_free(pbi->mt_vleft_col);
-            pbi->mt_vleft_col = NULL ;
-        }
+  /* Free above_row buffers. */
+  if (pbi->mt_yabove_row) {
+    for (i = 0; i < mb_rows; ++i) {
+      vpx_free(pbi->mt_yabove_row[i]);
+      pbi->mt_yabove_row[i] = NULL;
     }
+    vpx_free(pbi->mt_yabove_row);
+    pbi->mt_yabove_row = NULL;
+  }
+
+  if (pbi->mt_uabove_row) {
+    for (i = 0; i < mb_rows; ++i) {
+      vpx_free(pbi->mt_uabove_row[i]);
+      pbi->mt_uabove_row[i] = NULL;
+    }
+    vpx_free(pbi->mt_uabove_row);
+    pbi->mt_uabove_row = NULL;
+  }
+
+  if (pbi->mt_vabove_row) {
+    for (i = 0; i < mb_rows; ++i) {
+      vpx_free(pbi->mt_vabove_row[i]);
+      pbi->mt_vabove_row[i] = NULL;
+    }
+    vpx_free(pbi->mt_vabove_row);
+    pbi->mt_vabove_row = NULL;
+  }
+
+  /* Free left_col buffers. */
+  if (pbi->mt_yleft_col) {
+    for (i = 0; i < mb_rows; ++i) {
+      vpx_free(pbi->mt_yleft_col[i]);
+      pbi->mt_yleft_col[i] = NULL;
+    }
+    vpx_free(pbi->mt_yleft_col);
+    pbi->mt_yleft_col = NULL;
+  }
+
+  if (pbi->mt_uleft_col) {
+    for (i = 0; i < mb_rows; ++i) {
+      vpx_free(pbi->mt_uleft_col[i]);
+      pbi->mt_uleft_col[i] = NULL;
+    }
+    vpx_free(pbi->mt_uleft_col);
+    pbi->mt_uleft_col = NULL;
+  }
+
+  if (pbi->mt_vleft_col) {
+    for (i = 0; i < mb_rows; ++i) {
+      vpx_free(pbi->mt_vleft_col[i]);
+      pbi->mt_vleft_col[i] = NULL;
+    }
+    vpx_free(pbi->mt_vleft_col);
+    pbi->mt_vleft_col = NULL;
+  }
 }
 
 
@@ -852,32 +836,33 @@ void vp8_decoder_remove_threads(VP8D_COMP *pbi)
         protected_write(&pbi->mt_mutex, &pbi->b_multithreaded_rd, 0);
 
         /* allow all threads to exit */
-        for (i = 0; i < pbi->allocated_decoding_thread_count; i++)
+        for (i = 0; i < pbi->allocated_decoding_thread_count; ++i)
         {
             sem_post(&pbi->h_event_start_decoding[i]);
             pthread_join(pbi->h_decoding_thread[i], NULL);
         }
 
-        for (i = 0; i < pbi->allocated_decoding_thread_count; i++)
-        {
-            sem_destroy(&pbi->h_event_start_decoding[i]);
+        for (i = 0; i < pbi->allocated_decoding_thread_count; ++i) {
+          sem_destroy(&pbi->h_event_start_decoding[i]);
         }
 
         sem_destroy(&pbi->h_event_end_decoding);
 
-            vpx_free(pbi->h_decoding_thread);
-            pbi->h_decoding_thread = NULL;
+        vpx_free(pbi->h_decoding_thread);
+        pbi->h_decoding_thread = NULL;
 
-            vpx_free(pbi->h_event_start_decoding);
-            pbi->h_event_start_decoding = NULL;
+        vpx_free(pbi->h_event_start_decoding);
+        pbi->h_event_start_decoding = NULL;
 
-            vpx_free(pbi->mb_row_di);
-            pbi->mb_row_di = NULL ;
+        vpx_free(pbi->mb_row_di);
+        pbi->mb_row_di = NULL;
 
-            vpx_free(pbi->de_thread_data);
-            pbi->de_thread_data = NULL;
-    }
-    pthread_mutex_destroy(&pbi->mt_mutex);
+        vpx_free(pbi->de_thread_data);
+        pbi->de_thread_data = NULL;
+
+        vp8mt_de_alloc_temp_buffers(pbi, pbi->common.mb_rows);
+     }
+     pthread_mutex_destroy(&pbi->mt_mutex);
 }
 
 void vp8mt_decode_mb_rows( VP8D_COMP *pbi, MACROBLOCKD *xd)
