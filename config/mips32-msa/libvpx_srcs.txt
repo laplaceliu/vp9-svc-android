@@ -9,7 +9,6 @@ vp8/common/blockd.h
 vp8/common/coefupdateprobs.h
 vp8/common/common.h
 vp8/common/copy_c.c
-vp8/common/debugmodes.c
 vp8/common/default_coef_probs.h
 vp8/common/dequantize.c
 vp8/common/entropy.c
@@ -140,7 +139,6 @@ vp9/common/vp9_blockd.h
 vp9/common/vp9_common.h
 vp9/common/vp9_common_data.c
 vp9/common/vp9_common_data.h
-vp9/common/vp9_debugmodes.c
 vp9/common/vp9_entropy.c
 vp9/common/vp9_entropy.h
 vp9/common/vp9_entropymode.c
@@ -177,7 +175,6 @@ vp9/common/vp9_scan.c
 vp9/common/vp9_scan.h
 vp9/common/vp9_seg_common.c
 vp9/common/vp9_seg_common.h
-vp9/common/vp9_textblit.h
 vp9/common/vp9_thread_common.c
 vp9/common/vp9_thread_common.h
 vp9/common/vp9_tile_common.c
@@ -200,6 +197,8 @@ vp9/encoder/mips/msa/vp9_fdct4x4_msa.c
 vp9/encoder/mips/msa/vp9_fdct8x8_msa.c
 vp9/encoder/mips/msa/vp9_fdct_msa.h
 vp9/encoder/mips/msa/vp9_temporal_filter_msa.c
+vp9/encoder/vp9_alt_ref_aq.c
+vp9/encoder/vp9_alt_ref_aq.h
 vp9/encoder/vp9_aq_360.c
 vp9/encoder/vp9_aq_360.h
 vp9/encoder/vp9_aq_complexity.c
@@ -276,12 +275,10 @@ vp9/vp9_iface_common.h
 vp9/vp9cx.mk
 vp9/vp9dx.mk
 vpx/internal/vpx_codec_internal.h
-vpx/internal/vpx_psnr.h
 vpx/src/vpx_codec.c
 vpx/src/vpx_decoder.c
 vpx/src/vpx_encoder.c
 vpx/src/vpx_image.c
-vpx/src/vpx_psnr.c
 vpx/vp8.h
 vpx/vp8cx.h
 vpx/vp8dx.h
@@ -339,10 +336,13 @@ vpx_dsp/mips/vpx_convolve_copy_msa.c
 vpx_dsp/mips/vpx_convolve_msa.h
 vpx_dsp/prob.c
 vpx_dsp/prob.h
+vpx_dsp/psnr.c
+vpx_dsp/psnr.h
 vpx_dsp/quantize.c
 vpx_dsp/quantize.h
 vpx_dsp/sad.c
 vpx_dsp/subtract.c
+vpx_dsp/sum_squares.c
 vpx_dsp/txfm_common.h
 vpx_dsp/variance.c
 vpx_dsp/variance.h
