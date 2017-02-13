@@ -20,6 +20,9 @@ LOCAL_CFLAGS += -Wno-unused-parameter
 
 LOCAL_C_INCLUDES := $(libvpx_source_dir)
 
+LOCAL_SANITIZE := cfi
+LOCAL_SANITIZE_DIAG := cfi
+
 # Load the arch-specific settings
 include $(LOCAL_PATH)/config.$(TARGET_ARCH).mk
 LOCAL_SRC_FILES_$(TARGET_ARCH) := $(libvpx_codec_srcs_c_$(TARGET_ARCH))
