@@ -147,7 +147,7 @@ cp -R $LIBVPX_SRC_DIR $TEMP_DIR
 cd $TEMP_DIR
 
 echo "Generate config files."
-all_platforms="--enable-external-build --enable-realtime-only --enable-pic --disable-runtime-cpu-detect"
+all_platforms="--enable-external-build --enable-realtime-only --enable-pic --disable-runtime-cpu-detect --disable-install-docs --size-limit=4096x3072"
 intel="--disable-sse4_1 --disable-avx --disable-avx2 --as=yasm"
 gen_config_files x86 "--target=x86-linux-gcc ${intel} ${all_platforms}"
 gen_config_files x86_64 "--target=x86_64-linux-gcc ${intel} ${all_platforms}"
