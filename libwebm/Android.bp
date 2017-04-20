@@ -1,0 +1,5 @@
+cc_library_static {
+    name: "libwebm",
+    srcs: ["mkvparser/mkvparser.cc"],
+    export_include_dirs: ["."],
+}
