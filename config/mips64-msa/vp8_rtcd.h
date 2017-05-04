@@ -46,9 +46,6 @@ int vp8_block_error_c(short *coeff, short *dqcoeff);
 int vp8_block_error_msa(short *coeff, short *dqcoeff);
 #define vp8_block_error vp8_block_error_msa
 
-void vp8_clear_system_state_c();
-#define vp8_clear_system_state vp8_clear_system_state_c
-
 void vp8_copy_mem16x16_c(unsigned char *src, int src_pitch, unsigned char *dst, int dst_pitch);
 void vp8_copy_mem16x16_msa(unsigned char *src, int src_pitch, unsigned char *dst, int dst_pitch);
 #define vp8_copy_mem16x16 vp8_copy_mem16x16_msa
@@ -90,7 +87,8 @@ void vp8_dequantize_b_msa(struct blockd*, short *dqc);
 #define vp8_dequantize_b vp8_dequantize_b_msa
 
 int vp8_diamond_search_sad_c(struct macroblock *x, struct block *b, struct blockd *d, union int_mv *ref_mv, union int_mv *best_mv, int search_param, int sad_per_bit, int *num00, struct variance_vtable *fn_ptr, int *mvcost[2], union int_mv *center_mv);
-#define vp8_diamond_search_sad vp8_diamond_search_sad_c
+int vp8_diamond_search_sadx4(struct macroblock *x, struct block *b, struct blockd *d, union int_mv *ref_mv, union int_mv *best_mv, int search_param, int sad_per_bit, int *num00, struct variance_vtable *fn_ptr, int *mvcost[2], union int_mv *center_mv);
+#define vp8_diamond_search_sad vp8_diamond_search_sadx4
 
 void vp8_fast_quantize_b_c(struct block *, struct blockd *);
 void vp8_fast_quantize_b_msa(struct block *, struct blockd *);
@@ -140,7 +138,8 @@ int vp8_mbuverror_msa(struct macroblock *mb);
 #define vp8_mbuverror vp8_mbuverror_msa
 
 int vp8_refining_search_sad_c(struct macroblock *x, struct block *b, struct blockd *d, union int_mv *ref_mv, int sad_per_bit, int distance, struct variance_vtable *fn_ptr, int *mvcost[2], union int_mv *center_mv);
-#define vp8_refining_search_sad vp8_refining_search_sad_c
+int vp8_refining_search_sadx4(struct macroblock *x, struct block *b, struct blockd *d, union int_mv *ref_mv, int sad_per_bit, int distance, struct variance_vtable *fn_ptr, int *mvcost[2], union int_mv *center_mv);
+#define vp8_refining_search_sad vp8_refining_search_sadx4
 
 void vp8_regular_quantize_b_c(struct block *, struct blockd *);
 void vp8_regular_quantize_b_msa(struct block *, struct blockd *);
