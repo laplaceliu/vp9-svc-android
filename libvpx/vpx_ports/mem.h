@@ -33,6 +33,12 @@
 #define UNINITIALIZED_IS_SAFE(x) x
 #endif
 
+#if defined(__GNUC__) && __GNUC__ >= 4 && !defined(_WIN32)
+#define DECLARE_PROTECTED(decl) decl __attribute__((visibility("protected")))
+#else
+#define DECLARE_PROTECTED(decl) decl
+#endif
+
 #if HAVE_NEON && defined(_MSC_VER)
 #define __builtin_prefetch(x)
 #endif
