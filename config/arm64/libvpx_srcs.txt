@@ -235,12 +235,16 @@ vp9/encoder/vp9_extend.c
 vp9/encoder/vp9_extend.h
 vp9/encoder/vp9_firstpass.c
 vp9/encoder/vp9_firstpass.h
+vp9/encoder/vp9_frame_scale.c
+vp9/encoder/vp9_job_queue.h
 vp9/encoder/vp9_lookahead.c
 vp9/encoder/vp9_lookahead.h
 vp9/encoder/vp9_mbgraph.c
 vp9/encoder/vp9_mbgraph.h
 vp9/encoder/vp9_mcomp.c
 vp9/encoder/vp9_mcomp.h
+vp9/encoder/vp9_multi_thread.c
+vp9/encoder/vp9_multi_thread.h
 vp9/encoder/vp9_noise_estimate.c
 vp9/encoder/vp9_noise_estimate.h
 vp9/encoder/vp9_picklpf.c
@@ -297,11 +301,11 @@ vpx/vpx_image.h
 vpx/vpx_integer.h
 vpx_config.c
 vpx_dsp/arm/avg_neon.c
+vpx_dsp/arm/fdct_neon.c
 vpx_dsp/arm/fwd_txfm_neon.c
 vpx_dsp/arm/hadamard_neon.c
 vpx_dsp/arm/idct16x16_1_add_neon.c
 vpx_dsp/arm/idct16x16_add_neon.c
-vpx_dsp/arm/idct16x16_neon.c
 vpx_dsp/arm/idct32x32_135_add_neon.c
 vpx_dsp/arm/idct32x32_1_add_neon.c
 vpx_dsp/arm/idct32x32_34_add_neon.c
@@ -313,6 +317,7 @@ vpx_dsp/arm/idct8x8_add_neon.c
 vpx_dsp/arm/idct_neon.h
 vpx_dsp/arm/intrapred_neon.c
 vpx_dsp/arm/loopfilter_neon.c
+vpx_dsp/arm/mem_neon.h
 vpx_dsp/arm/sad4d_neon.c
 vpx_dsp/arm/sad_neon.c
 vpx_dsp/arm/subpel_variance_neon.c
