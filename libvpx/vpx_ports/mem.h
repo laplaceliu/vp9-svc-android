@@ -23,16 +23,6 @@
 #define DECLARE_ALIGNED(n, typ, val) typ val
 #endif
 
-/* Indicates that the usage of the specified variable has been audited to assure
- * that it's safe to use uninitialized. Silences 'may be used uninitialized'
- * warnings on gcc.
- */
-#if defined(__GNUC__) && __GNUC__
-#define UNINITIALIZED_IS_SAFE(x) x = x
-#else
-#define UNINITIALIZED_IS_SAFE(x) x
-#endif
-
 #if defined(__GNUC__) && __GNUC__ >= 4 && !defined(_WIN32)
 #define DECLARE_PROTECTED(decl) decl __attribute__((visibility("protected")))
 #else
@@ -51,8 +41,10 @@
   (((value) + ((1 << (n)) - 1)) & ~((1 << (n)) - 1))
 
 #define CONVERT_TO_SHORTPTR(x) ((uint16_t *)(((uintptr_t)(x)) << 1))
+#define CAST_TO_SHORTPTR(x) ((uint16_t *)((uintptr_t)(x)))
 #if CONFIG_VP9_HIGHBITDEPTH
 #define CONVERT_TO_BYTEPTR(x) ((uint8_t *)(((uintptr_t)(x)) >> 1))
+#define CAST_TO_BYTEPTR(x) ((uint8_t *)((uintptr_t)(x)))
 #endif  // CONFIG_VP9_HIGHBITDEPTH
 
 #if !defined(__has_feature)

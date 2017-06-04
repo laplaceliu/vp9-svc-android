@@ -8,6 +8,8 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
+#include <assert.h>
+
 #include "./vpx_config.h"
 #include "./vpx_dsp_rtcd.h"
 
@@ -224,6 +226,9 @@ MSE(8, 8)
 void vpx_comp_avg_pred_c(uint8_t *comp_pred, const uint8_t *pred, int width,
                          int height, const uint8_t *ref, int ref_stride) {
   int i, j;
+  /* comp_pred and pred must be 16 byte aligned. */
+  assert(((intptr_t)comp_pred & 0xf) == 0);
+  assert(((intptr_t)pred & 0xf) == 0);
 
   for (i = 0; i < height; ++i) {
     for (j = 0; j < width; ++j) {
@@ -294,7 +299,7 @@ static void highbd_12_variance(const uint8_t *a8, int a_stride,
                                               uint32_t *sse) {                 \
     int sum;                                                                   \
     highbd_8_variance(a, a_stride, b, b_stride, W, H, sse, &sum);              \
-    return *sse - (((int64_t)sum * sum) / (W * H));                            \
+    return *sse - (uint32_t)(((int64_t)sum * sum) / (W * H));                  \
   }                                                                            \
                                                                                \
   uint32_t vpx_highbd_10_variance##W##x##H##_c(const uint8_t *a, int a_stride, \
