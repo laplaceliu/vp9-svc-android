@@ -219,12 +219,16 @@ vp9/encoder/vp9_extend.c
 vp9/encoder/vp9_extend.h
 vp9/encoder/vp9_firstpass.c
 vp9/encoder/vp9_firstpass.h
+vp9/encoder/vp9_frame_scale.c
+vp9/encoder/vp9_job_queue.h
 vp9/encoder/vp9_lookahead.c
 vp9/encoder/vp9_lookahead.h
 vp9/encoder/vp9_mbgraph.c
 vp9/encoder/vp9_mbgraph.h
 vp9/encoder/vp9_mcomp.c
 vp9/encoder/vp9_mcomp.h
+vp9/encoder/vp9_multi_thread.c
+vp9/encoder/vp9_multi_thread.h
 vp9/encoder/vp9_noise_estimate.c
 vp9/encoder/vp9_noise_estimate.h
 vp9/encoder/vp9_picklpf.c

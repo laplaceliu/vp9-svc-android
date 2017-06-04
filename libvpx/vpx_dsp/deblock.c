@@ -7,10 +7,11 @@
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
  */
+#include <assert.h>
 #include <stdlib.h>
-#include "vpx/vpx_integer.h"
+#include "vpx_ports/mem.h"
 
-const int16_t vpx_rv[] = {
+DECLARE_PROTECTED(const int16_t vpx_rv[]) = {
   8,  5,  2,  2,  8,  12, 4,  9,  8,  3,  0,  3,  9,  0,  0,  0,  8,  3,  14,
   4,  10, 1,  11, 14, 1,  14, 9,  6,  12, 11, 8,  6,  10, 0,  0,  8,  9,  0,
   3,  14, 8,  11, 13, 4,  2,  9,  0,  3,  9,  6,  1,  2,  3,  14, 13, 1,  8,
@@ -47,6 +48,9 @@ void vpx_post_proc_down_and_across_mb_row_c(unsigned char *src_ptr,
   int col;
   unsigned char v;
   unsigned char d[4];
+
+  assert(size >= 8);
+  assert(cols >= 8);
 
   for (row = 0; row < size; row++) {
     /* post_proc_down for one row */
