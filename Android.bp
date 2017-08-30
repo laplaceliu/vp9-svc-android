@@ -2151,6 +2151,7 @@ cc_library_static {
         diag: {
             cfi: true,
         },
+        blacklist: "cfi_blacklist.txt",
     },
 }
 
