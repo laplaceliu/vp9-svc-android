@@ -2141,6 +2141,8 @@ cc_library_static {
 
     cflags: [
         "-O3",
+        "-Wall",
+        "-Werror",
         "-Wno-unused-parameter",
     ],
 
