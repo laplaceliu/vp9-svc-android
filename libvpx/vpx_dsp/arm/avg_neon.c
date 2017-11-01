@@ -15,6 +15,8 @@
 #include "./vpx_config.h"
 
 #include "vpx/vpx_integer.h"
+#include "vpx_dsp/arm/idct_neon.h"
+#include "vpx_dsp/arm/mem_neon.h"
 
 static INLINE unsigned int horizontal_add_u16x8(const uint16x8_t v_16x8) {
   const uint32x4_t a = vpaddlq_u16(v_16x8);
@@ -64,13 +66,13 @@ unsigned int vpx_avg_8x8_neon(const uint8_t *s, int p) {
 
 // coeff: 16 bits, dynamic range [-32640, 32640].
 // length: value range {16, 64, 256, 1024}.
-int vpx_satd_neon(const int16_t *coeff, int length) {
+int vpx_satd_neon(const tran_low_t *coeff, int length) {
   const int16x4_t zero = vdup_n_s16(0);
   int32x4_t accum = vdupq_n_s32(0);
 
   do {
-    const int16x8_t src0 = vld1q_s16(coeff);
-    const int16x8_t src8 = vld1q_s16(coeff + 8);
+    const int16x8_t src0 = load_tran_low_to_s16q(coeff);
+    const int16x8_t src8 = load_tran_low_to_s16q(coeff + 8);
     accum = vabal_s16(accum, vget_low_s16(src0), zero);
     accum = vabal_s16(accum, vget_high_s16(src0), zero);
     accum = vabal_s16(accum, vget_low_s16(src8), zero);
@@ -198,27 +200,24 @@ int vpx_vector_var_neon(int16_t const *ref, int16_t const *src, const int bwl) {
   }
 }
 
-void vpx_minmax_8x8_neon(const uint8_t *a, int a_stride,
-                         const uint8_t *b, int b_stride,
-                         int *min, int *max) {
+void vpx_minmax_8x8_neon(const uint8_t *a, int a_stride, const uint8_t *b,
+                         int b_stride, int *min, int *max) {
   // Load and concatenate.
-  const uint8x16_t a01 = vcombine_u8(vld1_u8(a),
-                                     vld1_u8(a + a_stride));
-  const uint8x16_t a23 = vcombine_u8(vld1_u8(a + 2 * a_stride),
-                                     vld1_u8(a + 3 * a_stride));
-  const uint8x16_t a45 = vcombine_u8(vld1_u8(a + 4 * a_stride),
-                                     vld1_u8(a + 5 * a_stride));
-  const uint8x16_t a67 = vcombine_u8(vld1_u8(a + 6 * a_stride),
-                                     vld1_u8(a + 7 * a_stride));
+  const uint8x16_t a01 = vcombine_u8(vld1_u8(a), vld1_u8(a + a_stride));
+  const uint8x16_t a23 =
+      vcombine_u8(vld1_u8(a + 2 * a_stride), vld1_u8(a + 3 * a_stride));
+  const uint8x16_t a45 =
+      vcombine_u8(vld1_u8(a + 4 * a_stride), vld1_u8(a + 5 * a_stride));
+  const uint8x16_t a67 =
+      vcombine_u8(vld1_u8(a + 6 * a_stride), vld1_u8(a + 7 * a_stride));
 
-  const uint8x16_t b01 = vcombine_u8(vld1_u8(b),
-                                     vld1_u8(b + b_stride));
-  const uint8x16_t b23 = vcombine_u8(vld1_u8(b + 2 * b_stride),
-                                     vld1_u8(b + 3 * b_stride));
-  const uint8x16_t b45 = vcombine_u8(vld1_u8(b + 4 * b_stride),
-                                     vld1_u8(b + 5 * b_stride));
-  const uint8x16_t b67 = vcombine_u8(vld1_u8(b + 6 * b_stride),
-                                     vld1_u8(b + 7 * b_stride));
+  const uint8x16_t b01 = vcombine_u8(vld1_u8(b), vld1_u8(b + b_stride));
+  const uint8x16_t b23 =
+      vcombine_u8(vld1_u8(b + 2 * b_stride), vld1_u8(b + 3 * b_stride));
+  const uint8x16_t b45 =
+      vcombine_u8(vld1_u8(b + 4 * b_stride), vld1_u8(b + 5 * b_stride));
+  const uint8x16_t b67 =
+      vcombine_u8(vld1_u8(b + 6 * b_stride), vld1_u8(b + 7 * b_stride));
 
   // Absolute difference.
   const uint8x16_t ab01_diff = vabdq_u8(a01, b01);
