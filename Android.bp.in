@@ -15,6 +15,7 @@ gensrcs {
 
 cc_library_static {
     name: "libvpx",
+    vendor_available: true,
 
     arch: {
         arm: {

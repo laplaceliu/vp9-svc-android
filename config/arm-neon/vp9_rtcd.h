@@ -1,3 +1,4 @@
+// This file is generated. Do not edit.
 #ifndef VP9_RTCD_H_
 #define VP9_RTCD_H_
 
@@ -52,9 +53,6 @@ void vp9_fht4x4_c(const int16_t *input, tran_low_t *output, int stride, int tx_t
 void vp9_fht8x8_c(const int16_t *input, tran_low_t *output, int stride, int tx_type);
 #define vp9_fht8x8 vp9_fht8x8_c
 
-int vp9_full_search_sad_c(const struct macroblock *x, const struct mv *ref_mv, int sad_per_bit, int distance, const struct vp9_variance_vtable *fn_ptr, const struct mv *center_mv, struct mv *best_mv);
-#define vp9_full_search_sad vp9_full_search_sad_c
-
 void vp9_fwht4x4_c(const int16_t *input, tran_low_t *output, int stride);
 #define vp9_fwht4x4 vp9_fwht4x4_c
 
@@ -105,13 +103,12 @@ void vp9_quantize_fp_neon(const tran_low_t *coeff_ptr, intptr_t n_coeffs, int sk
 #define vp9_quantize_fp vp9_quantize_fp_neon
 
 void vp9_quantize_fp_32x32_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs, int skip_block, const int16_t *round_ptr, const int16_t *quant_ptr, tran_low_t *qcoeff_ptr, tran_low_t *dqcoeff_ptr, const int16_t *dequant_ptr, uint16_t *eob_ptr, const int16_t *scan, const int16_t *iscan);
-#define vp9_quantize_fp_32x32 vp9_quantize_fp_32x32_c
+void vp9_quantize_fp_32x32_neon(const tran_low_t *coeff_ptr, intptr_t n_coeffs, int skip_block, const int16_t *round_ptr, const int16_t *quant_ptr, tran_low_t *qcoeff_ptr, tran_low_t *dqcoeff_ptr, const int16_t *dequant_ptr, uint16_t *eob_ptr, const int16_t *scan, const int16_t *iscan);
+#define vp9_quantize_fp_32x32 vp9_quantize_fp_32x32_neon
 
 void vp9_scale_and_extend_frame_c(const struct yv12_buffer_config *src, struct yv12_buffer_config *dst, INTERP_FILTER filter_type, int phase_scaler);
-#define vp9_scale_and_extend_frame vp9_scale_and_extend_frame_c
-
-void vp9_temporal_filter_apply_c(const uint8_t *frame1, unsigned int stride, const uint8_t *frame2, unsigned int block_width, unsigned int block_height, int strength, int filter_weight, uint32_t *accumulator, uint16_t *count);
-#define vp9_temporal_filter_apply vp9_temporal_filter_apply_c
+void vp9_scale_and_extend_frame_neon(const struct yv12_buffer_config *src, struct yv12_buffer_config *dst, INTERP_FILTER filter_type, int phase_scaler);
+#define vp9_scale_and_extend_frame vp9_scale_and_extend_frame_neon
 
 void vp9_rtcd(void);
 

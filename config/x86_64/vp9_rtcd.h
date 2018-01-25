@@ -1,3 +1,4 @@
+// This file is generated. Do not edit.
 #ifndef VP9_RTCD_H_
 #define VP9_RTCD_H_
 
@@ -56,10 +57,6 @@ void vp9_fht4x4_sse2(const int16_t *input, tran_low_t *output, int stride, int t
 void vp9_fht8x8_c(const int16_t *input, tran_low_t *output, int stride, int tx_type);
 void vp9_fht8x8_sse2(const int16_t *input, tran_low_t *output, int stride, int tx_type);
 #define vp9_fht8x8 vp9_fht8x8_sse2
-
-int vp9_full_search_sad_c(const struct macroblock *x, const struct mv *ref_mv, int sad_per_bit, int distance, const struct vp9_variance_vtable *fn_ptr, const struct mv *center_mv, struct mv *best_mv);
-int vp9_full_search_sadx3(const struct macroblock *x, const struct mv *ref_mv, int sad_per_bit, int distance, const struct vp9_variance_vtable *fn_ptr, const struct mv *center_mv, struct mv *best_mv);
-#define vp9_full_search_sad vp9_full_search_sadx3
 
 void vp9_fwht4x4_c(const int16_t *input, tran_low_t *output, int stride);
 void vp9_fwht4x4_sse2(const int16_t *input, tran_low_t *output, int stride);
@@ -123,9 +120,6 @@ void vp9_quantize_fp_32x32_ssse3(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
 void vp9_scale_and_extend_frame_c(const struct yv12_buffer_config *src, struct yv12_buffer_config *dst, INTERP_FILTER filter_type, int phase_scaler);
 void vp9_scale_and_extend_frame_ssse3(const struct yv12_buffer_config *src, struct yv12_buffer_config *dst, INTERP_FILTER filter_type, int phase_scaler);
 #define vp9_scale_and_extend_frame vp9_scale_and_extend_frame_ssse3
-
-void vp9_temporal_filter_apply_c(const uint8_t *frame1, unsigned int stride, const uint8_t *frame2, unsigned int block_width, unsigned int block_height, int strength, int filter_weight, uint32_t *accumulator, uint16_t *count);
-#define vp9_temporal_filter_apply vp9_temporal_filter_apply_c
 
 void vp9_rtcd(void);
 
