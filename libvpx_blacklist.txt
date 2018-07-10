@@ -1,1 +1,2 @@
+[cfi]
 src:*external/libvpx/*
