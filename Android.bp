@@ -1608,11 +1608,13 @@ cc_library_static {
     export_include_dirs: ["libvpx"],
 
     sanitize: {
-        cfi: true,
+        integer_overflow: true,
+        // Enable CFI if this becomes a shared library.
+        // cfi: true,
         diag: {
-            cfi: true,
+            integer_overflow: true,
         },
-        blacklist: "cfi_blacklist.txt",
+        blacklist: "libvpx_blacklist.txt",
     },
 }
 
