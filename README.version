@@ -4,3 +4,4 @@ BugComponent: 42195
 Owners: johannkoenig
 Local Modifications:
   Add visibility="protected" attribute for global variables referenced in asm files.
+  Remove "register" keyword from variables
