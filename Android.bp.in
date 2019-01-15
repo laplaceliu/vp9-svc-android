@@ -1,18 +1,3 @@
-// This step is only required for ARM. MIPS uses intrinsics exclusively and x86
-// requires 'yasm' to pre-process its assembly files.
-// The ARM assembly sources must be converted from ADS to GAS compatible format.
-gensrcs {
-    name: "libvpx_arm_neon_asm_srcs_converted",
-    srcs: libvpx_arm_neon_asm_srcs,
-    tool_files: [
-        "libvpx/build/make/ads2gas.pl",
-        "libvpx/build/make/thumb.pm",
-    ],
-    output_extension: "asm.S",
-    cmd: "cat $(in) | perl $(location libvpx/build/make/ads2gas.pl) > $(out)",
-    export_include_dirs: ["libvpx"],
-}
-
 cc_library_static {
     name: "libvpx",
     vendor_available: true,
@@ -30,8 +15,7 @@ cc_library_static {
 
             neon: {
                 exclude_srcs: libvpx_arm_neon_exclude_c_srcs,
-                srcs: libvpx_arm_neon_c_srcs,
-                generated_sources: ["libvpx_arm_neon_asm_srcs_converted"],
+                srcs: libvpx_arm_neon_c_srcs + libvpx_arm_neon_asm_srcs,
                 local_include_dirs: ["config/arm-neon"],
             },
         },
@@ -97,7 +81,3 @@ cc_library_static {
         blacklist: "cfi_blacklist.txt",
     },
 }
-
-subdirs = [
-    "libwebm",
-]

@@ -164,6 +164,12 @@ function libvpx_srcs_txt_to_asm_srcs {
     grep ".asm$" $1 | awk '$0="\"libvpx/"$0"\","' | sort
 }
 
+# Extract a list of converted ASM sources from a libvpx_srcs.txt file
+# $1 - path to libvpx_srcs.txt
+function libvpx_srcs_txt_to_asm_S_srcs {
+    grep ".asm.S$" $1 | awk '$0="\""$0"\","' | sort
+}
+
 # Convert a list of sources to a blueprint file containing a variable
 # assignment.
 # $1 - Config
@@ -201,14 +207,29 @@ function gen_bp_srcs_with_excludes {
     echo "\"$LIBVPX_CONFIG_DIR/$2/vpx_config.c\","
     echo "]"
     echo
-    if grep -q ".asm$" libvpx_srcs_$1.txt; then
+    if grep -qE ".asm(.S)?$" libvpx_srcs_$1.txt; then
       echo
       echo "${varprefix}_asm_srcs = ["
       libvpx_srcs_txt_to_asm_srcs libvpx_srcs_$1.txt
+      libvpx_srcs_txt_to_asm_S_srcs libvpx_srcs_$1.txt
       echo "]"
     fi
     echo
   ) > config_$1.bp
+}
+
+# The ARM assembly sources must be converted from ADS to GAS compatible format.
+# This step is only required for ARM. MIPS uses intrinsics exclusively and x86
+# requires 'yasm' to pre-process its assembly files.
+function convert_arm_asm {
+  find $BASE_DIR/$LIBVPX_CONFIG_DIR/arm-neon -name '*.asm.S' | xargs -r rm
+  for src in $(grep ".asm$" libvpx_srcs_arm-neon.txt); do
+    newsrc=$LIBVPX_CONFIG_DIR/arm-neon/$src.S
+    mkdir -p $BASE_DIR/$(dirname $newsrc)
+    perl $BASE_DIR/$LIBVPX_SRC_DIR/build/make/ads2gas.pl <$BASE_DIR/$LIBVPX_SRC_DIR/$src >$BASE_DIR/$newsrc
+    echo $newsrc >>libvpx_srcs_arm-neon.txt
+  done
+  sed -i "/\.asm$/ d" libvpx_srcs_arm-neon.txt
 }
 
 echo "Create temporary directory."
@@ -285,6 +306,9 @@ gen_source_list mips32-msa
 gen_source_list mips64
 gen_source_list mips64-msa
 gen_source_list generic
+
+echo "Convert ARM assembly format"
+convert_arm_asm
 
 echo "Convert to bp"
 gen_bp_srcs x86
