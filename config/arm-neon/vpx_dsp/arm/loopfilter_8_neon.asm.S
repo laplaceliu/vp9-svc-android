@@ -1,6 +1,7 @@
 @ This file was created from a .asm file
 @  using the ads2gas.pl script.
 	.equ DO1STROUNDING, 0
+	.syntax unified
 @
 @  Copyright (c) 2013 The WebM project authors. All Rights Reserved.
 @
@@ -213,7 +214,7 @@ _vpx_lpf_vertical_8_dual_neon:
     str         lr, [sp, #16]              @ thresh1
     add         sp, #4
     pop         {r0-r1, lr}
-    add         r0, r1, lsl #3             @ s + 8 * pitch
+    add         r0, r0, r1, lsl #3         @ s + 8 * pitch
     b           vpx_lpf_vertical_8_neon
 	.size vpx_lpf_vertical_8_dual_neon, .-vpx_lpf_vertical_8_dual_neon    @ ENDP        @ |vpx_lpf_vertical_8_dual_neon|
 

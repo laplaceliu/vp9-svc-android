@@ -74,10 +74,18 @@ cc_library_static {
     export_include_dirs: ["libvpx"],
 
     sanitize: {
-        cfi: true,
+        integer_overflow: true,
+        misc_undefined: ["bounds"],
+        // Enable CFI if this becomes a shared library.
+        // cfi: true,
         diag: {
-            cfi: true,
+            integer_overflow: true,
+            misc_undefined: ["bounds"],
+            no_recover: [
+                "bounds",
+                "integer",
+            ],
         },
-        blacklist: "cfi_blacklist.txt",
+        blacklist: "libvpx_blacklist.txt",
     },
 }
