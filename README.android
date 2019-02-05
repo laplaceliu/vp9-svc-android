@@ -6,7 +6,7 @@ License File: libvpx/LICENSE
 
 Date: Wednesday January 16 2019
 Branch: origin/northernshoveler
-Commit: 858fe955ae5a42a0006c974b0837df18b246986f
+Commit: b85ac11737430a7f600ac4efb643d4833afd7428
 
 Description:
 Contains the sources used to compile libvpx.
