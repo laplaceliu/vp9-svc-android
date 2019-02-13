@@ -6,9 +6,6 @@ cc_library_static {
         // configured to require the neon unit
         arm: {
             neon: {
-                // Clang arm assembler cannot compile libvpx .S files yet.
-                clang_asflags: ["-no-integrated-as"],
-
                 // Want arm, not thumb, optimized
                 instruction_set: "arm",
 
@@ -28,10 +25,8 @@ cc_library_static {
         },
 
         x86_64: {
-            //srcs: libvpx_x86_64_c_srcs + libvpx_x86_64_asm_srcs,
-            //local_include_dirs: ["config/x86_64"],
-            srcs: libvpx_generic_c_srcs,
-            local_include_dirs: ["config/generic"],
+            srcs: libvpx_x86_64_c_srcs + libvpx_x86_64_asm_srcs,
+            local_include_dirs: ["config/x86_64"],
         },
     },
 
