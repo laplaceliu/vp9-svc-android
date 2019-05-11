@@ -4233,6 +4233,7 @@ long ContentEncoding::ParseContentEncodingEntry(long long start, long long size,
         new (std::nothrow) ContentEncryption*[encryption_count];
     if (!encryption_entries_) {
       delete[] compression_entries_;
+      compression_entries_ = NULL;
       return -1;
     }
     encryption_entries_end_ = encryption_entries_;
