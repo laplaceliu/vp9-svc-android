@@ -4230,6 +4230,7 @@ long ContentEncoding::ParseContentEncodingEntry(long long start, long long size,
         new (std::nothrow) ContentEncryption*[encryption_count];
     if (!encryption_entries_) {
       delete[] compression_entries_;
+      compression_entries_ = NULL;
       return -1;
     }
     encryption_entries_end_ = encryption_entries_;
@@ -4323,6 +4324,12 @@ long ContentEncoding::ParseCompressionEntry(long long start, long long size,
       if (read_status) {
         delete[] buf;
         return status;
+      }
+
+      // There should be only one settings element per content compression.
+      if (compression->settings != NULL) {
+        delete[] buf;
+        return E_FILE_FORMAT_INVALID;
       }
 
       compression->settings = buf;
