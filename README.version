@@ -8,3 +8,4 @@ Local Modifications:
       (11de1b838 Fix timestamp overflow issues)
     * https://chromium-review.googlesource.com/q/I1d8a6e263fddb9e4cc6265a313011a18d18bbf9e
       (04383393e Add missing typecast and re-enable timestamp test)
+    * 223645aa8 vpx_codec_enc_config_default: rm unnecessary loop
