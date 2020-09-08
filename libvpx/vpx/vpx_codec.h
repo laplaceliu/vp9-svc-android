@@ -22,13 +22,16 @@
  * video codec algorithm.
  *
  * An application instantiates a specific codec instance by using
- * vpx_codec_init() and a pointer to the algorithm's interface structure:
+ * vpx_codec_dec_init() or vpx_codec_enc_init() and a pointer to the
+ * algorithm's interface structure:
  *     <pre>
  *     my_app.c:
  *       extern vpx_codec_iface_t my_codec;
  *       {
  *           vpx_codec_ctx_t algo;
- *           res = vpx_codec_init(&algo, &my_codec);
+ *           int threads = 4;
+ *           vpx_codec_dec_cfg_t cfg = { threads, 0, 0 };
+ *           res = vpx_codec_dec_init(&algo, &my_codec, &cfg, 0);
  *       }
  *     </pre>
  *
@@ -241,11 +244,11 @@ typedef enum vpx_bit_depth {
  */
 int vpx_codec_version(void);
 #define VPX_VERSION_MAJOR(v) \
-  ((v >> 16) & 0xff) /**< extract major from packed version */
+  (((v) >> 16) & 0xff) /**< extract major from packed version */
 #define VPX_VERSION_MINOR(v) \
-  ((v >> 8) & 0xff) /**< extract minor from packed version */
+  (((v) >> 8) & 0xff) /**< extract minor from packed version */
 #define VPX_VERSION_PATCH(v) \
-  ((v >> 0) & 0xff) /**< extract patch from packed version */
+  (((v) >> 0) & 0xff) /**< extract patch from packed version */
 
 /*!\brief Return the version major number */
 #define vpx_codec_version_major() ((vpx_codec_version() >> 16) & 0xff)

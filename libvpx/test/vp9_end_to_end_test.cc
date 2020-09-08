@@ -24,14 +24,14 @@ namespace {
 const unsigned int kWidth = 160;
 const unsigned int kHeight = 90;
 const unsigned int kFramerate = 50;
-const unsigned int kFrames = 10;
+const unsigned int kFrames = 20;
 const int kBitrate = 500;
 // List of psnr thresholds for speed settings 0-7 and 5 encoding modes
 const double kPsnrThreshold[][5] = {
   { 36.0, 37.0, 37.0, 37.0, 37.0 }, { 35.0, 36.0, 36.0, 36.0, 36.0 },
   { 34.0, 35.0, 35.0, 35.0, 35.0 }, { 33.0, 34.0, 34.0, 34.0, 34.0 },
-  { 32.0, 33.0, 33.0, 33.0, 33.0 }, { 31.0, 32.0, 32.0, 32.0, 32.0 },
-  { 30.0, 31.0, 31.0, 31.0, 31.0 }, { 29.0, 30.0, 30.0, 30.0, 30.0 },
+  { 32.0, 33.0, 33.0, 33.0, 33.0 }, { 28.0, 32.0, 32.0, 32.0, 32.0 },
+  { 28.5, 31.0, 31.0, 31.0, 31.0 }, { 27.5, 30.0, 30.0, 30.0, 30.0 },
 };
 
 typedef struct {
@@ -48,15 +48,19 @@ const TestVideoParam kTestVectors[] = {
   { "park_joy_90p_8_444.y4m", 8, VPX_IMG_FMT_I444, VPX_BITS_8, 1 },
   { "park_joy_90p_8_440.yuv", 8, VPX_IMG_FMT_I440, VPX_BITS_8, 1 },
 #if CONFIG_VP9_HIGHBITDEPTH
-  { "park_joy_90p_10_420.y4m", 10, VPX_IMG_FMT_I42016, VPX_BITS_10, 2 },
-  { "park_joy_90p_10_422.y4m", 10, VPX_IMG_FMT_I42216, VPX_BITS_10, 3 },
-  { "park_joy_90p_10_444.y4m", 10, VPX_IMG_FMT_I44416, VPX_BITS_10, 3 },
+  { "park_joy_90p_10_420_20f.y4m", 10, VPX_IMG_FMT_I42016, VPX_BITS_10, 2 },
+  { "park_joy_90p_10_422_20f.y4m", 10, VPX_IMG_FMT_I42216, VPX_BITS_10, 3 },
+  { "park_joy_90p_10_444_20f.y4m", 10, VPX_IMG_FMT_I44416, VPX_BITS_10, 3 },
   { "park_joy_90p_10_440.yuv", 10, VPX_IMG_FMT_I44016, VPX_BITS_10, 3 },
-  { "park_joy_90p_12_420.y4m", 12, VPX_IMG_FMT_I42016, VPX_BITS_12, 2 },
-  { "park_joy_90p_12_422.y4m", 12, VPX_IMG_FMT_I42216, VPX_BITS_12, 3 },
-  { "park_joy_90p_12_444.y4m", 12, VPX_IMG_FMT_I44416, VPX_BITS_12, 3 },
+  { "park_joy_90p_12_420_20f.y4m", 12, VPX_IMG_FMT_I42016, VPX_BITS_12, 2 },
+  { "park_joy_90p_12_422_20f.y4m", 12, VPX_IMG_FMT_I42216, VPX_BITS_12, 3 },
+  { "park_joy_90p_12_444_20f.y4m", 12, VPX_IMG_FMT_I44416, VPX_BITS_12, 3 },
   { "park_joy_90p_12_440.yuv", 12, VPX_IMG_FMT_I44016, VPX_BITS_12, 3 },
 #endif  // CONFIG_VP9_HIGHBITDEPTH
+};
+
+const TestVideoParam kTestVectorsNv12[] = {
+  { "hantro_collage_w352h288_nv12.yuv", 8, VPX_IMG_FMT_NV12, VPX_BITS_8, 0 },
 };
 
 // Encoding modes tested
@@ -237,6 +241,27 @@ class EndToEndTestLoopFilterThreading
 };
 #endif  // CONFIG_VP9_DECODER
 
+class EndToEndNV12 : public EndToEndTestLarge {};
+
+TEST_P(EndToEndNV12, EndtoEndNV12Test) {
+  cfg_.rc_target_bitrate = kBitrate;
+  cfg_.g_error_resilient = 0;
+  cfg_.g_profile = test_video_param_.profile;
+  cfg_.g_input_bit_depth = test_video_param_.input_bit_depth;
+  cfg_.g_bit_depth = test_video_param_.bit_depth;
+  init_flags_ = VPX_CODEC_USE_PSNR;
+  if (cfg_.g_bit_depth > 8) init_flags_ |= VPX_CODEC_USE_HIGHBITDEPTH;
+
+  std::unique_ptr<libvpx_test::VideoSource> video;
+
+  video.reset(new libvpx_test::YUVVideoSource(test_video_param_.filename,
+                                              test_video_param_.fmt, 352, 288,
+                                              30, 1, 0, 100));
+  ASSERT_NE(video.get(), nullptr);
+
+  ASSERT_NO_FATAL_FAILURE(RunLoop(video.get()));
+}
+
 TEST_P(EndToEndTestLarge, EndtoEndPSNRTest) {
   cfg_.rc_target_bitrate = kBitrate;
   cfg_.g_error_resilient = 0;
@@ -255,7 +280,7 @@ TEST_P(EndToEndTestLarge, EndtoEndPSNRTest) {
         test_video_param_.filename, test_video_param_.fmt, kWidth, kHeight,
         kFramerate, 1, 0, kFrames));
   }
-  ASSERT_TRUE(video.get() != NULL);
+  ASSERT_NE(video.get(), nullptr);
 
   ASSERT_NO_FATAL_FAILURE(RunLoop(video.get()));
   const double psnr = GetAveragePsnr();
@@ -282,7 +307,7 @@ TEST_P(EndToEndTestLarge, EndtoEndPSNRDenoiserAQTest) {
         test_video_param_.filename, test_video_param_.fmt, kWidth, kHeight,
         kFramerate, 1, 0, kFrames));
   }
-  ASSERT_TRUE(video.get() != NULL);
+  ASSERT_NE(video.get(), nullptr);
 
   ASSERT_NO_FATAL_FAILURE(RunLoop(video.get()));
   const double psnr = GetAveragePsnr();
@@ -309,16 +334,21 @@ TEST_P(EndToEndTestLoopFilterThreading, TileCountChange) {
 }
 #endif  // CONFIG_VP9_DECODER
 
-VP9_INSTANTIATE_TEST_CASE(EndToEndTestLarge,
-                          ::testing::ValuesIn(kEncodingModeVectors),
-                          ::testing::ValuesIn(kTestVectors),
-                          ::testing::ValuesIn(kCpuUsedVectors));
+VP9_INSTANTIATE_TEST_SUITE(EndToEndTestLarge,
+                           ::testing::ValuesIn(kEncodingModeVectors),
+                           ::testing::ValuesIn(kTestVectors),
+                           ::testing::ValuesIn(kCpuUsedVectors));
 
-VP9_INSTANTIATE_TEST_CASE(EndToEndTestAdaptiveRDThresh,
-                          ::testing::Values(5, 6, 7), ::testing::Values(8, 9));
+VP9_INSTANTIATE_TEST_SUITE(EndToEndNV12,
+                           ::testing::Values(::libvpx_test::kRealTime),
+                           ::testing::ValuesIn(kTestVectorsNv12),
+                           ::testing::ValuesIn({ 6, 7, 8 }));
+
+VP9_INSTANTIATE_TEST_SUITE(EndToEndTestAdaptiveRDThresh,
+                           ::testing::Values(5, 6, 7), ::testing::Values(8, 9));
 
 #if CONFIG_VP9_DECODER
-VP9_INSTANTIATE_TEST_CASE(EndToEndTestLoopFilterThreading, ::testing::Bool(),
-                          ::testing::Range(2, 6));
+VP9_INSTANTIATE_TEST_SUITE(EndToEndTestLoopFilterThreading, ::testing::Bool(),
+                           ::testing::Range(2, 6));
 #endif  // CONFIG_VP9_DECODER
 }  // namespace

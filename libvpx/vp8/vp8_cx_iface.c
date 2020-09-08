@@ -16,6 +16,7 @@
 #include "vpx/internal/vpx_codec_internal.h"
 #include "vpx_version.h"
 #include "vpx_mem/vpx_mem.h"
+#include "vpx_ports/static_assert.h"
 #include "vpx_ports/system_state.h"
 #include "vpx_ports/vpx_once.h"
 #include "vpx_util/vpx_timestamp.h"
@@ -110,10 +111,10 @@ static vpx_codec_err_t update_error_state(
     return VPX_CODEC_INVALID_PARAM; \
   } while (0)
 
-#define RANGE_CHECK(p, memb, lo, hi)                                 \
-  do {                                                               \
-    if (!(((p)->memb == lo || (p)->memb > (lo)) && (p)->memb <= hi)) \
-      ERROR(#memb " out of range [" #lo ".." #hi "]");               \
+#define RANGE_CHECK(p, memb, lo, hi)                                     \
+  do {                                                                   \
+    if (!(((p)->memb == (lo) || (p)->memb > (lo)) && (p)->memb <= (hi))) \
+      ERROR(#memb " out of range [" #lo ".." #hi "]");                   \
   } while (0)
 
 #define RANGE_CHECK_HI(p, memb, hi)                                     \
@@ -130,22 +131,6 @@ static vpx_codec_err_t update_error_state(
   do {                                                                \
     if (!!((p)->memb) != (p)->memb) ERROR(#memb " expected boolean"); \
   } while (0)
-
-#if defined(_MSC_VER)
-#define COMPILE_TIME_ASSERT(boolexp)              \
-  do {                                            \
-    char compile_time_assert[(boolexp) ? 1 : -1]; \
-    (void)compile_time_assert;                    \
-  } while (0)
-#else /* !_MSC_VER */
-#define COMPILE_TIME_ASSERT(boolexp)                         \
-  do {                                                       \
-    struct {                                                 \
-      unsigned int compile_time_assert : (boolexp) ? 1 : -1; \
-    } compile_time_assert;                                   \
-    (void)compile_time_assert;                               \
-  } while (0)
-#endif /* _MSC_VER */
 
 static vpx_codec_err_t validate_config(vpx_codec_alg_priv_t *ctx,
                                        const vpx_codec_enc_cfg_t *cfg,
@@ -279,9 +264,12 @@ static vpx_codec_err_t validate_img(vpx_codec_alg_priv_t *ctx,
                                     const vpx_image_t *img) {
   switch (img->fmt) {
     case VPX_IMG_FMT_YV12:
-    case VPX_IMG_FMT_I420: break;
+    case VPX_IMG_FMT_I420:
+    case VPX_IMG_FMT_NV12: break;
     default:
-      ERROR("Invalid image format. Only YV12 and I420 images are supported");
+      ERROR(
+          "Invalid image format. Only YV12, I420 and NV12 images are "
+          "supported");
   }
 
   if ((img->d_w != ctx->cfg.g_w) || (img->d_h != ctx->cfg.g_h))
@@ -503,6 +491,9 @@ static vpx_codec_err_t update_extracfg(vpx_codec_alg_priv_t *ctx,
 static vpx_codec_err_t set_cpu_used(vpx_codec_alg_priv_t *ctx, va_list args) {
   struct vp8_extracfg extra_cfg = ctx->vp8_cfg;
   extra_cfg.cpu_used = CAST(VP8E_SET_CPUUSED, args);
+  // Use fastest speed setting (speed 16 or -16) if it's set beyond the range.
+  extra_cfg.cpu_used = VPXMIN(16, extra_cfg.cpu_used);
+  extra_cfg.cpu_used = VPXMAX(-16, extra_cfg.cpu_used);
   return update_extracfg(ctx, &extra_cfg);
 }
 
@@ -596,7 +587,7 @@ static vpx_codec_err_t set_screen_content_mode(vpx_codec_alg_priv_t *ctx,
 
 static vpx_codec_err_t vp8e_mr_alloc_mem(const vpx_codec_enc_cfg_t *cfg,
                                          void **mem_loc) {
-  vpx_codec_err_t res = 0;
+  vpx_codec_err_t res = VPX_CODEC_OK;
 
 #if CONFIG_MULTI_RES_ENCODING
   LOWER_RES_FRAME_INFO *shared_mem_loc;
@@ -605,12 +596,13 @@ static vpx_codec_err_t vp8e_mr_alloc_mem(const vpx_codec_enc_cfg_t *cfg,
 
   shared_mem_loc = calloc(1, sizeof(LOWER_RES_FRAME_INFO));
   if (!shared_mem_loc) {
-    res = VPX_CODEC_MEM_ERROR;
+    return VPX_CODEC_MEM_ERROR;
   }
 
   shared_mem_loc->mb_info =
       calloc(mb_rows * mb_cols, sizeof(LOWER_RES_MB_INFO));
   if (!(shared_mem_loc->mb_info)) {
+    free(shared_mem_loc);
     res = VPX_CODEC_MEM_ERROR;
   } else {
     *mem_loc = (void *)shared_mem_loc;
@@ -747,8 +739,8 @@ static void pick_quickcompress_mode(vpx_codec_alg_priv_t *ctx,
     /* Convert duration parameter from stream timebase to microseconds */
     uint64_t duration_us;
 
-    COMPILE_TIME_ASSERT(TICKS_PER_SEC > 1000000 &&
-                        (TICKS_PER_SEC % 1000000) == 0);
+    VPX_STATIC_ASSERT(TICKS_PER_SEC > 1000000 &&
+                      (TICKS_PER_SEC % 1000000) == 0);
 
     duration_us = duration * (uint64_t)ctx->timestamp_ratio.num /
                   (ctx->timestamp_ratio.den * (TICKS_PER_SEC / 1000000));

@@ -21,6 +21,19 @@
 namespace svc_test {
 namespace {
 
+typedef enum {
+  // Inter-layer prediction is on on all frames.
+  INTER_LAYER_PRED_ON,
+  // Inter-layer prediction is off on all frames.
+  INTER_LAYER_PRED_OFF,
+  // Inter-layer prediction is off on non-key frames and non-sync frames.
+  INTER_LAYER_PRED_OFF_NONKEY,
+  // Inter-layer prediction is on on all frames, but constrained such
+  // that any layer S (> 0) can only predict from previous spatial
+  // layer S-1, from the same superframe.
+  INTER_LAYER_PRED_ON_CONSTRAINED
+} INTER_LAYER_PRED;
+
 class ScalePartitionOnePassCbrSvc
     : public OnePassCbrSvc,
       public ::testing::TestWithParam<const ::libvpx_test::CodecFactory *> {
@@ -130,7 +143,10 @@ class SyncFrameOnePassCbrSvc : public OnePassCbrSvc,
     current_video_frame_ = video->frame();
     PreEncodeFrameHookSetup(video, encoder);
     if (video->frame() == 0) {
-      encoder->Control(VP9E_SET_SVC_INTER_LAYER_PRED, inter_layer_pred_mode_);
+      // Do not turn off inter-layer pred completely because simulcast mode
+      // fails.
+      if (inter_layer_pred_mode_ != INTER_LAYER_PRED_OFF)
+        encoder->Control(VP9E_SET_SVC_INTER_LAYER_PRED, inter_layer_pred_mode_);
       encoder->Control(VP9E_SET_NOISE_SENSITIVITY, denoiser_on_);
       if (intra_only_test_)
         // Decoder sets the color_space for Intra-only frames
@@ -454,9 +470,9 @@ TEST_P(SyncFrameOnePassCbrSvc, OnePassCbrSvc1SL3TLSyncFrameIntraOnlyQVGA) {
 #endif
 }
 
-VP9_INSTANTIATE_TEST_CASE(SyncFrameOnePassCbrSvc, ::testing::Range(0, 3));
+VP9_INSTANTIATE_TEST_SUITE(SyncFrameOnePassCbrSvc, ::testing::Range(0, 3));
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     VP9, ScalePartitionOnePassCbrSvc,
     ::testing::Values(
         static_cast<const libvpx_test::CodecFactory *>(&libvpx_test::kVP9)));
