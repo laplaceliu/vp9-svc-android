@@ -44,16 +44,20 @@ export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 ```
 
 ## 
-```
+```bash
 ./update_libvpx.sh [tag/branch]
 ```
 
-
-
-```
+```bash
 ./generate_config.sh
 ```
 
+```bash
+./libvpx/configure --target=arm64-android-gcc --enable-external-build
 ```
 
+```bash
+NDK_PROJECT_PATH=. ndk-build APP_BUILD_SCRIPT=./libvpx/test/android/Android.mk \
+APP_ABI=arm64-v8a APP_PLATFORM=android-21 APP_OPTIM=release \
+APP_STL=c++_static NDK_TOOLCHAIN_VERSION=clang ENABLE_SHARED=0
 ```
