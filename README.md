@@ -61,3 +61,11 @@ ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk \
 APP_ABI=arm64-v8a APP_PLATFORM=android-21 APP_OPTIM=release \
 APP_STL=c++_static NDK_TOOLCHAIN_VERSION=clang ENABLE_SHARED=0
 ```
+
+
+## Generate Android jni files
+
+using [swig](http://www.swig.org/)
+```
+swig -v -java -package your.package.name -outdir your/output/path -o vp9_svc_encoder_wrap.c vp9_svc_encoder.i
+```
