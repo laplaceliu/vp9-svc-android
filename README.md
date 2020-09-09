@@ -43,25 +43,46 @@ export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
 export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 ```
 
-## 
+## Build instructions
+upgrade libvpx's version
 ```bash
 ./update_libvpx.sh [tag/branch]
 ```
 
+Generate files of config
 ```bash
 ./generate_config.sh
 ```
 
+Generate files of build
 ```bash
 ./libvpx/configure --target=arm64-android-gcc --enable-external-build
 ```
 
+valid `target`
+```
+arm64-android-gcc      
+armv7-android-gcc
+x86-android-gcc
+x86_64-android-gcc
+```
+
+
+Build
 ```bash
 ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk \
 APP_ABI=arm64-v8a APP_PLATFORM=android-21 APP_OPTIM=release \
 APP_STL=c++_static NDK_TOOLCHAIN_VERSION=clang ENABLE_SHARED=0
 ```
 
+valid `APP_ABI`
+
+```
+arm64-v8a
+armeabi-v7a
+x86
+x86_64
+```
 
 ## Generate Android jni files
 
