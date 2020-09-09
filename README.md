@@ -67,5 +67,13 @@ APP_STL=c++_static NDK_TOOLCHAIN_VERSION=clang ENABLE_SHARED=0
 
 using [swig](http://www.swig.org/)
 ```
-swig -v -java -package your.package.name -outdir your/output/path -o vp9_svc_encoder_wrap.c vp9_svc_encoder.i
+swig -v -java -package your.package.name -outdir your/output/path -o your/jni/wrapper/vp9_svc_encoder_wrap.c vp9_svc_encoder.i
+```
+
+Note that it is common to spicify the `outdir` to `app/src/main/java/your/package/name` if you spicified the `package` to `your.package.name`.
+The `xxx_wrap.c` and `xxx.i` are commonly stored in `app/src/main/cpp`.
+
+For example:
+```
+swig -v -java -package io.byteplanet.encoder -outdir src/main/java/io/byteplanet/encoder -o src/main/cpp/vp9_svc_encoder_wrap.c src/main/cpp/vp9_svc_encoder.i
 ```
